@@ -78,6 +78,8 @@ abstract class opMemberAction extends sfActions
   {
     $this->getUser()->logout();
 
+    $this->redirectToLoginIfSslRequired($request);
+
     $this->forms = $this->getUser()->getAuthForms();
 
     if ($request->hasParameter('authMode'))
@@ -104,6 +106,51 @@ abstract class opMemberAction extends sfActions
     }
 
     return sfView::SUCCESS;
+  }
+
+  private function redirectToLoginIfSslRequired($request)
+  {
+    $routing = sfContext::getInstance()->getRouting();
+    if (sfConfig::get('op_use_ssl', false) && !$request->isSecure())
+    {
+      $app = sfConfig::get('sf_app');
+      $sslRequiredList = sfConfig::get('op_ssl_required_actions', array(
+        $app => array(),
+      ));
+
+      $moduleName = sfConfig::get('sf_login_module');
+      $actionName = sfConfig::get('sf_login_action');
+      if (in_array($moduleName.'/'.$actionName, $sslRequiredList[$app]))
+      {
+        $nextUri = $routing->getCurrentInternalUri();
+        if ($_SERVER['QUERY_STRING'])
+        {
+          if (false !== strpos($nextUri, '?'))
+          {
+            $nextUri .= '&';
+          }
+          else
+          {
+            $nextUri .= '?';
+          }
+
+          $nextUri .= $_SERVER['QUERY_STRING'];
+        }
+
+        $nextUriParam = array(
+          'next_uri' => $nextUri
+        );
+
+        $baseUrl = sfConfig::get('op_ssl_base_url');
+        $scriptName = basename($request->getScriptName());
+        $replacement = (false !== strpos($request->getPathInfoPrefix(), $scriptName)) ? '/'.$scriptName : '';
+        $loginPath = str_replace($request->getPathInfoPrefix(), $replacement, $this->generateUrl('login'));
+        $loginUrl = $baseUrl[$app].$loginPath;
+        $loginUrl .= '?'.http_build_query($nextUriParam, '', '&');
+
+        $this->redirect($loginUrl);
+      }
+    }
   }
 
   public function executeLogout($request)
