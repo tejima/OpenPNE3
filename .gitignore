@@ -23,3 +23,4 @@ data/config/*
 web/cache/*
 config/config.OpenPNE2.php
 data/*.lck
+.elasticbeanstalk/
