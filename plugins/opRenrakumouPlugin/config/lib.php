@@ -30,7 +30,7 @@ class TejimayaBoundioUtil
 		Boundio::configure('userSerialId', $_SERVER['userSerialId']);
 		Boundio::configure('appId', $_SERVER['appId']);
 		Boundio::configure('authKey', $_SERVER['authKey']);
-		$result = Boundio::call($tel, 'silent()%%silent()%%file_d('.$text.')%%silent()%%file_d('.$text.')%%silent()%%file_d(この件に了解であれば1を、不明な場合は0をプッシュしてください。)%%gather(20,1)%%file_d(連絡は以上です。)');
+		$result = Boundio::call($tel, 'silent()%%silent()%%file_d('.$text.',1)%%silent()%%file_d('.$text.',1)%%silent()%%file_d(この件に了解であれば1を、不明な場合は0をプッシュしてください。,1)%%gather(20,1)%%file_d(連絡は以上です。,1)');
 		error_log(date("c"). print_r($result,true) . ": \n", 3, "/tmp/php.log");		
 	}
 }
