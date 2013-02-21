@@ -10,7 +10,8 @@ class TejimayaNotify
 		$community_member_list = $action->getRoute()->getObject()->getMembers(100);
 		
     $id = $action->getUser()->getMemberId();
-    $body = str_replace(array("\r\n","\r","\n"), '', $topic['body']);
+    $body = $topic['body'];
+    $body = str_replace(array("\r\n","\r","\n",","), '', $body);
 
 		error_log(date("c"). $body . ": \n", 3, "/tmp/php.log");
 
@@ -23,14 +24,13 @@ class TejimayaNotify
 	
 }
 
-
 class TejimayaBoundioUtil
 {
 	function pushcall($tel=null,$text=null){
-		Boundio::configure('userSerialId', $_SERVER['PARAM1']);
-		Boundio::configure('appId', $_SERVER['PARAM2']);
-		Boundio::configure('authKey', $_SERVER['PARAM3']);
-		$result = Boundio::call($tel, 'silent()%%silent()%%file_d('.$text.',1)%%silent()%%file_d('.$text.',1)%%silent()%%file_d(この件に了解であれば1を、不明な場合は0をプッシュしてください。,1)%%gather(20,1)%%file_d(連絡は以上です。,1)');
+		Boundio::configure('userSerialId', $_SERVER['userSerialId']);
+		Boundio::configure('appId', $_SERVER['appId']);
+		Boundio::configure('authKey', $_SERVER['authKey']);
+		$result = Boundio::call($tel, 'silent()%%silent()%%file_d('.$text.')%%silent()%%file_d('.$text.')%%silent()%%file_d(この件に了解であれば1を、不明な場合は0をプッシュしてください。)%%gather(20,1)%%file_d(連絡は以上です。)');
 		error_log(date("c"). print_r($result,true) . ": \n", 3, "/tmp/php.log");		
 	}
 }
