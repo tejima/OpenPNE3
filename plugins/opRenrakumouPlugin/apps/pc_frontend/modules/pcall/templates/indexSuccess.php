@@ -102,12 +102,19 @@ var openpne = '.json_encode($jsonData).';
     <hr>
     <div>© Tejimaya, Inc. 2002〜</div>
   </div>
-
-  <!-- Modal window list -->
+<!--
+■ ■ ■ ■       ■ ■ ■         ■ ■ ■   ■             ■ ■ ■       ■ ■ ■       ■ ■ ■ 
+■       ■       ■         ■     ■   ■           ■       ■   ■       ■   ■       ■
+■       ■       ■       ■       ■   ■           ■       ■   ■           ■       
+■       ■       ■       ■       ■   ■           ■       ■   ■             ■ ■ ■ 
+■       ■       ■       ■ ■ ■ ■ ■   ■           ■       ■   ■     ■ ■           ■
+■       ■       ■       ■       ■   ■           ■       ■   ■       ■   ■       ■
+■ ■ ■ ■       ■ ■ ■     ■       ■   ■ ■ ■ ■ ■     ■ ■ ■       ■ ■ ■       ■ ■ ■ 
+-->
   <div id="testcall-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">自分にテスト発信</h3>
+      <h3>自分にテスト発信</h3>
     </div>
     <div class="modal-body">
       <form>
@@ -137,7 +144,7 @@ var openpne = '.json_encode($jsonData).';
   <div id="docall-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">発信の最終確認</h3>
+      <h3>発信の最終確認</h3>
     </div>
     <div class="modal-body">
       <form>
@@ -161,8 +168,15 @@ var openpne = '.json_encode($jsonData).';
       <button id="docall-button" class="btn btn-danger">発信：実際に電話（メール）を発信する</button>
     </div>
   </div>
-
-  <!-- jQuery template list -->
+<!--
+■ ■ ■ ■ ■   ■ ■ ■ ■ ■   ■       ■   ■ ■ ■ ■     ■               ■ ■ ■   ■ ■ ■ ■ ■   ■ ■ ■ ■ ■     ■ ■ ■ 
+    ■       ■           ■ ■   ■ ■   ■       ■   ■             ■     ■       ■       ■           ■       ■
+    ■       ■           ■   ■   ■   ■       ■   ■           ■       ■       ■       ■           ■       
+    ■       ■ ■ ■ ■     ■   ■   ■   ■ ■ ■ ■     ■           ■       ■       ■       ■ ■ ■ ■       ■ ■ ■ 
+    ■       ■           ■       ■   ■           ■           ■ ■ ■ ■ ■       ■       ■                   ■
+    ■       ■           ■       ■   ■           ■           ■       ■       ■       ■           ■       ■
+    ■       ■ ■ ■ ■ ■   ■       ■   ■           ■ ■ ■ ■ ■   ■       ■       ■       ■ ■ ■ ■ ■     ■ ■ ■ 
+-->
   <script id="tmpl_list_target" type="text/x-jquery-tmpl">
                         <tr>
                         <td>${nickname}</td>
@@ -189,14 +203,14 @@ var openpne = '.json_encode($jsonData).';
                   <th>電話番号</th>
                   <th>メールアドレス</th>
                   <th>電話連絡状況</th>
-                  <!--<th>メール連絡状況</th>-->
+                  <th>メール連絡状況</th>
                 </tr>
               </thead>
               <tbody>
               {{each status_list}}
-                {{if 'CALLED'==telstat || 'PUSH1'==telstat }}
+                {{if 'CALLED'==telstat || 'PUSH1'==telstat || 'PUSH1'==mailstat }}
                 <tr class="success">
-                {{else 'CALLWAITING'==telstat || 'CALLPROCESSING'==telstat }}
+                {{else 'CALLWAITING'==telstat || 'CALLPROCESSING'==telstat  }}
                 <tr class="warning">
                 {{else 'FAIL'==telstat || 'FAIL1'==telstat || 'FAIL2'==telstat || 'HUZAI'==telstat || 'HUZAI1'==telstat || 'HUZAI2'==telstat}}
                 <tr class="error">
@@ -231,23 +245,21 @@ var openpne = '.json_encode($jsonData).';
                   {{else}}
                   <td>ー</td>
                   {{/if}}
-                  <!--
                   {{if 'CALLWAITING'==mailstat}}
                   <td>発信待機</td>
                   {{else 'CALLPROCESSING'==mailstat}}
-                  <td>待機中</td>
+                  <td>発信作業中</td>
                   {{else 'FAIL1'==mailstat}}
-                  <td>待機中</td>
+                  <td>発信失敗1回目</td>
                   {{else 'FAIL2'==mailstat}}
-                  <td>待機中</td>
+                  <td>発信失敗2回目</td>
                   {{else 'PUSH1'==mailstat}}
-                  <td>待機中</td>
+                  <td>発信：了解有</td>
                   {{else 'CALLED'==mailstat}}
-                  <td>待機中</td>
+                  <td>発信：了解無</td>
                   {{else}}
                   <td>ー</td>
                   {{/if}}
-                  -->
                 </tr>
               {{/each}}
               </tbody>
@@ -260,7 +272,16 @@ var openpne = '.json_encode($jsonData).';
     {{/each}}
   </script>
 
-  <!-- Script list -->
+<!--
+  ■ ■ ■       ■ ■ ■     ■ ■ ■ ■       ■ ■ ■     ■ ■ ■ ■     ■ ■ ■ ■ ■     ■ ■ ■ 
+■       ■   ■       ■   ■       ■       ■       ■       ■       ■       ■       ■
+■           ■           ■       ■       ■       ■       ■       ■       ■       
+  ■ ■ ■     ■           ■ ■ ■ ■         ■       ■ ■ ■ ■         ■         ■ ■ ■ 
+        ■   ■           ■   ■           ■       ■               ■               ■
+■       ■   ■       ■   ■     ■         ■       ■               ■       ■       ■
+  ■ ■ ■       ■ ■ ■     ■       ■     ■ ■ ■     ■               ■         ■ ■ ■ 
+-->
+
   <script>
   if (!('console' in window)) {
     window.console = {};
@@ -269,7 +290,13 @@ var openpne = '.json_encode($jsonData).';
     };
   }
   $(".tooltip-target").tooltip();
+  function validate_target(){
+    //各要素があるか？
+    //メール：無効文字が使われていないか？
+    //電話：無効文字が使われていないか？
+    //FIXME
 
+  }
   function update_call_status(){
     $.ajax({
       type: "GET",
@@ -286,9 +313,17 @@ var openpne = '.json_encode($jsonData).';
       }
     });
   }
-
   update_call_status();
 
+/*
+■ ■ ■ ■ ■   ■       ■   ■ ■ ■ ■ ■   ■       ■   ■ ■ ■ ■ ■     ■ ■ ■ 
+■           ■       ■   ■           ■       ■       ■       ■       ■
+■           ■       ■   ■           ■ ■     ■       ■       ■       
+■ ■ ■ ■     ■       ■   ■ ■ ■ ■     ■   ■   ■       ■         ■ ■ ■ 
+■           ■       ■   ■           ■     ■ ■       ■               ■
+■             ■   ■     ■           ■       ■       ■       ■       ■
+■ ■ ■ ■ ■       ■       ■ ■ ■ ■ ■   ■       ■       ■         ■ ■ ■ 
+*/
   $('#update-status').live('click',function(){
     update_call_status();
     $.ajax({
@@ -312,14 +347,11 @@ var openpne = '.json_encode($jsonData).';
       $('#docall-modal').modal('hide');
     }
   });
-
   $('#docall-modal').on('hide', function () {
     $('#docall-button').button('reset');
   });
-
   $("#docall-button").live('click',function(){
-  $('#docall-button').button('loading');
-
+    $('#docall-button').button('loading');
     $.ajax({
       type: "POST",
       url: "/api.php/call/queue.json",
@@ -342,7 +374,6 @@ var openpne = '.json_encode($jsonData).';
       }
     });
   });
-
 
   $('#testcall-modal').on('show', function () {
     $('#testcall-title').val($("#call-title").val() ? $("#call-title").val() : $("#call-title").attr("placeholder"));
@@ -387,6 +418,10 @@ var openpne = '.json_encode($jsonData).';
     $('#direct-target-text').val(str);
     $('#call-title').val(call_list[index].title);
     $('#call-body').val(call_list[index].body);
+  });
+
+  $('#direct-target-text').live('change',function(){
+    //console.log("CHANGE");
   });
 
 

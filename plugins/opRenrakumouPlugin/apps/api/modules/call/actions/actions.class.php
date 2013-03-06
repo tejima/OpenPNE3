@@ -11,38 +11,38 @@ class callActions extends sfActions
 {
   public function executeCron(sfWebRequest $request)
   {
-    if(!$this->getUser()->getMemberId()){
+    if(1 != $this->getUser()->getMemberId()){
       return $this->renderText(json_encode(array("status" => "error","message"=> "ACL required")));
-      //FIXME root権限のみ実行に制限する
     }
     $mode = $request->getParameter("mode");
     switch($mode){
       case "update":
-        TejimayaBoundioUtil::update();
+        RenrakumouUtil::updatestatus_tel();
         break;
       case "process":
-        TejimayaBoundioUtil::process();
+        RenrakumouUtil::process_tel();
+        RenrakumouUtil::process_mail();
         break;
       case "boundio":
-        TejimayaBoundioUtil::boundio();
+        RenrakumouUtil::sync_boundio();
         break;
       case "test":
         break;
       case "all":
-        TejimayaBoundioUtil::process();
-        TejimayaBoundioUtil::boundio();
-        TejimayaBoundioUtil::update();
+        RenrakumouUtil::process_tel();
+        RenrakumouUtil::process_mail();
+        RenrakumouUtil::sync_boundio();
+        RenrakumouUtil::updatestatus_tel();
         break;
     }
-
-    return $this->renderText(json_encode(array("status" => "success","message"=> "$mode DONE")));
+    return $this->renderText(json_encode(array("status" => "success","message"=> "$mode mode DONE")));
   }
   public function executeDemo(sfWebRequest $request)
   {
   	$tel = $request->getParameter("tel");
   	$body = $request->getParameter("body");
   	$body = str_replace(array("\r\n","\r","\n"), '', $body);
-		$result = TejimayaBoundioUtil::pushcall($tel,$body,$_SERVER['userSerialId'],$_SERVER['appId'],$_SERVER['authKey']);
+		$result = RenrakumouUtil::pushcall($tel,$body,$_SERVER['userSerialId'],$_SERVER['appId'],$_SERVER['authKey']);
     //FIXME クライアントのJS側に、エラーパターンを伝える、入力値がおかしいのか？文章が長すぎるのか？サーバがおかしいのか？
 		if($result){
       return $this->renderText(json_encode(array("status" => "success","tel" => $tel,"body" => $body, "result" => $result)));
@@ -59,18 +59,16 @@ class callActions extends sfActions
 
     $data = $request->getParameter("member_text");
 
-    //FIXME  Data Validationしよう
-
+    //FIXME Validationしよう
     $data = str_replace(array("\r\n","\r"), "\n", $data);
 
     $status = array();
     $status['title'] = $title;
     $status['body'] = $body;
-    $status['date'] = "2013/02/26"; //FIXME
+    $status['date'] = date("Y/m/d");
     $status['community_id'] = $community_id;
     $status['status'] = "ACTIVE";
     $status['status_list'] = array();
-
 
     if(!$data){
       $this->logMessage('if(!$data)',"err");
