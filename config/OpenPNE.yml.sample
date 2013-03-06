@@ -4,7 +4,7 @@
 
 # SNS の URL
 # URL of the SNS
-base_url: "http://example.com"
+base_url: "http://<?php echo $_SERVER['sitename']; ?>"
 
 ######################################
 # メール (Mail)
@@ -12,7 +12,7 @@ base_url: "http://example.com"
 
 # SNS からのメール送信に使うドメイン
 # Domain to use for sending e-mail from the SNS
-mail_domain: "example.com"
+mail_domain: "<?php echo $_SERVER['sitename']; ?>"
 
 # メール投稿アドレスにメンバー毎にユニークなハッシュを含める
 # Contain an individual hash for an e-mail address that is used to post something to the SNS
